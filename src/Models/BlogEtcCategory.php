@@ -3,18 +3,13 @@
 namespace WebDevEtc\BlogEtc\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use WebDevEtc\BlogEtc\Baum\Node;
 
-class BlogEtcCategory extends Node
+class BlogEtcCategory extends Model
 {
-    protected $parentColumn = 'parent_id';
-    public $siblings = array();
-
     public $fillable = [
         'category_name',
         'slug',
         'category_description',
-        'parent_id'
     ];
 
     /**
@@ -31,12 +26,7 @@ class BlogEtcCategory extends Node
      */
     public function url()
     {
-        $theChainString = "";
-        $chain = $this->getAncestorsAndSelf();
-        foreach ($chain as $category){
-            $theChainString .=  "/" . $category->slug;
-        }
-        return route("blogetc.view_category", $theChainString);
+        return route("blogetc.view_category", $this->slug);
     }
 
     /**
@@ -47,30 +37,6 @@ class BlogEtcCategory extends Node
     {
         return route("blogetc.admin.categories.edit_category", $this->id);
     }
-
-    public function loadSiblings(){
-        $this->siblings = $this->children()->get();
-    }
-
-//    public function parent()
-//    {
-//        return $this->belongsTo('WebDevEtc\BlogEtc\Models\BlogEtcCategory', 'parent_id');
-//    }
-//
-//    public function children()
-//    {
-//        return $this->hasMany('WebDevEtc\BlogEtc\Models\BlogEtcCategory', 'parent_id');
-//    }
-//
-//    // recursive, loads all descendants
-//    private function childrenRecursive()
-//    {
-//        return $this->children()->with('children')->get();
-//    }
-//
-//    public function loadChildren(){
-//        $this->childrenCat = $this->childrenRecursive();
-//    }
 
 //    public function scopeApproved($query)
 //    {
