@@ -1,4 +1,9 @@
 @extends("layouts.app",['title'=>$title])
+
+@section('blog-custom-css')
+    <link type="text/css" href="{{ asset('hessam-blog.css') }}" rel="stylesheet">
+@endsection
+
 @section("content")
 
     <div class='row'>
@@ -17,6 +22,20 @@
 
                 <div class="row">
                     <div class="col-md-9">
+
+                        @if($category_chain)
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @forelse($category_chain as $cat)
+                                            / <a href="{{$cat->url()}}">
+                                                <span class="cat1">{{$cat->category_name}}</span>
+                                            </a>
+                                        @empty @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
                         @if(isset($blogetc_category) && $blogetc_category)
                             <h2 class='text-center'> {{$blogetc_category->category_name}}</h2>
