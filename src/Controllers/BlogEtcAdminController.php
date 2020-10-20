@@ -11,23 +11,23 @@ use WebDevEtc\BlogEtc\Events\BlogPostEdited;
 use WebDevEtc\BlogEtc\Events\BlogPostWillBeDeleted;
 use WebDevEtc\BlogEtc\Helpers;
 use WebDevEtc\BlogEtc\Middleware\UserCanManageBlogPosts;
-use WebDevEtc\BlogEtc\Models\HessamPost;
-use WebDevEtc\BlogEtc\Models\HessamUploadedPhoto;
+use WebDevEtc\BlogEtc\Models\BlogEtcPost;
+use WebDevEtc\BlogEtc\Models\BlogEtcUploadedPhoto;
 use WebDevEtc\BlogEtc\Requests\CreateBlogEtcPostRequest;
 use WebDevEtc\BlogEtc\Requests\DeleteBlogEtcPostRequest;
 use WebDevEtc\BlogEtc\Requests\UpdateBlogEtcPostRequest;
 use WebDevEtc\BlogEtc\Traits\UploadFileTrait;
 
 /**
- * Class HessamAdminController
+ * Class BlogEtcAdminController
  * @package WebDevEtc\BlogEtc\Controllers
  */
-class HessamAdminController extends Controller
+class BlogEtcAdminController extends Controller
 {
     use UploadFileTrait;
 
     /**
-     * HessamAdminController constructor.
+     * BlogEtcAdminController constructor.
      */
     public function __construct()
     {
@@ -46,7 +46,7 @@ class HessamAdminController extends Controller
      */
     public function index()
     {
-        $posts = HessamPost::orderBy("posted_at", "desc")
+        $posts = BlogEtcPost::orderBy("posted_at", "desc")
             ->paginate(10);
 
         return view("blogetc_admin::index", ['posts'=>$posts]);
@@ -70,7 +70,7 @@ class HessamAdminController extends Controller
      */
     public function store_post(CreateBlogEtcPostRequest $request)
     {
-        $new_blog_post = new HessamPost($request->all());
+        $new_blog_post = new BlogEtcPost($request->all());
 
         $this->processUploadedImages($request, $new_blog_post);
 
@@ -96,7 +96,7 @@ class HessamAdminController extends Controller
      */
     public function edit_post( $blogPostId)
     {
-        $post = HessamPost::findOrFail($blogPostId);
+        $post = BlogEtcPost::findOrFail($blogPostId);
         return view("blogetc_admin::posts.edit_post")->withPost($post);
     }
 
@@ -110,8 +110,8 @@ class HessamAdminController extends Controller
      */
     public function update_post(UpdateBlogEtcPostRequest $request, $blogPostId)
     {
-        /** @var HessamPost $post */
-        $post = HessamPost::findOrFail($blogPostId);
+        /** @var BlogEtcPost $post */
+        $post = BlogEtcPost::findOrFail($blogPostId);
         $post->fill($request->all());
 
         $this->processUploadedImages($request, $post);
@@ -128,7 +128,7 @@ class HessamAdminController extends Controller
 
     public function remove_photo($postSlug)
     {
-        $post = HessamPost::where("slug", $postSlug)->firstOrFail();
+        $post = BlogEtcPost::where("slug", $postSlug)->firstOrFail();
 
         $path = public_path('/' . config("blogetc.blog_upload_dir"));
         if (!$this->checked_blog_image_dir_is_writable) {
@@ -171,7 +171,7 @@ class HessamAdminController extends Controller
     public function destroy_post(DeleteBlogEtcPostRequest $request, $blogPostId)
     {
 
-        $post = HessamPost::findOrFail($blogPostId);
+        $post = BlogEtcPost::findOrFail($blogPostId);
         event(new BlogPostWillBeDeleted($post));
 
         $post->delete();
@@ -192,7 +192,7 @@ class HessamAdminController extends Controller
      * @throws \Exception
      * @todo - next full release, tidy this up!
      */
-    protected function processUploadedImages(BaseRequestInterface $request, HessamPost $new_blog_post)
+    protected function processUploadedImages(BaseRequestInterface $request, BlogEtcPost $new_blog_post)
     {
         if (!config("blogetc.image_upload_enabled")) {
             // image upload was disabled
@@ -221,7 +221,7 @@ class HessamAdminController extends Controller
         // store the image upload.
         // todo: link this to the blogetc_post row.
         if (count(array_filter($uploaded_image_details))>0) {
-            HessamUploadedPhoto::create([
+            BlogEtcUploadedPhoto::create([
                 'source' => "BlogFeaturedImage",
                 'uploaded_images' => $uploaded_image_details,
             ]);

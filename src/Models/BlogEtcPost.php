@@ -1,12 +1,43 @@
 <?php
 
-
 namespace WebDevEtc\BlogEtc\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Swis\Laravel\Fulltext\Indexable;
+use WebDevEtc\BlogEtc\Interfaces\SearchResultInterface;
+use WebDevEtc\BlogEtc\Scopes\BlogEtcPublishedScope;
 
-class HessamPostTranslation extends Model
+/**
+ * Class BlogEtcPost
+ * @package WebDevEtc\BlogEtc\Models
+ */
+class BlogEtcPost extends Model implements SearchResultInterface
 {
+
+    use Sluggable;
+    use Indexable;
+
+    protected $indexContentColumns = ['post_body', 'short_description', 'meta_desc',];
+    protected $indexTitleColumns = ['title', 'subtitle', 'seo_title',];
+
+    /**
+     * @var array
+     */
+    public $casts = [
+        'is_published' => 'boolean',
+    ];
+
+    /**
+     * @var array
+     */
+    public $dates = [
+        'posted_at'
+    ];
+
+    /**
+     * @var array
+     */
     public $fillable = [
 
         'title',
@@ -17,25 +48,110 @@ class HessamPostTranslation extends Model
         'meta_desc',
         'slug',
         'use_view_file',
+
+        'is_published',
+        'posted_at',
     ];
 
     /**
-     * Get the user that owns the phone.
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
      */
-    public function post()
+    public function sluggable()
     {
-        return $this->belongsTo(HessamPost::class, 'post_id');
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
+
+    public function search_result_page_url()
+    {
+        return $this->url();
+    }
+
+    public function search_result_page_title()
+    {
+        return $this->title;
     }
 
     /**
-     * The associated Language
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * The "booting" method of the model.
+     *
+     * @return void
      */
-    public function language()
+    protected static function boot()
     {
-        return $this->hasOne(HessamLanguage::class,"lang_id");
+        parent::boot();
+
+        /* If user is logged in and \Auth::user()->canManageBlogEtcPosts() == true, show any/all posts.
+           otherwise (which will be for most users) it should only show published posts that have a posted_at
+           time <= Carbon::now(). This sets it up: */
+        static::addGlobalScope(new BlogEtcPublishedScope());
     }
 
+    /**
+     * The associated author (if user_id) is set
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function author()
+    {
+        return $this->belongsTo(config("blogetc.user_model"), 'user_id');
+    }
+
+    /**
+     * Return author string (either from the User (via ->user_id), or the submitted author_name value
+     * @return string
+     */
+    public function author_string()
+    {
+        if ($this->author) {
+            return optional($this->author)->name;
+        } else {
+            return 'Unknown Author';
+        }
+    }
+
+    /**
+     * The associated categories for this blog post
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(BlogEtcCategory::class, 'blog_etc_post_categories');
+    }
+
+    /**
+     * Comments for this post
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(BlogEtcComment::class);
+    }
+
+    /**
+     * Returns the public facing URL to view this blog post
+     *
+     * @return string
+     */
+    public function url()
+    {
+        return route("blogetc.single", $this->slug);
+    }
+
+    /**
+     * Return the URL for editing the post (used for admin users)
+     * @return string
+     */
+    public function edit_url()
+    {
+        return route("blogetc.admin.edit_post", $this->id);
+    }
 
     /**
      * If $this->user_view_file is not empty, then it'll return the dot syntax location of the blade file it should look for
@@ -165,11 +281,11 @@ class HessamPostTranslation extends Model
                 in the database table:    : blogetc_posts.image_medium
                 when calling image_url()  : image_url("medium")
             */
-            throw new \InvalidArgumentException("Invalid image size ($size). HessamPost image size should not begin with 'image_'. Remove this from the start of $size. It *should* be in the blogetc.image_sizes config though!");
+            throw new \InvalidArgumentException("Invalid image size ($size). BlogEtcPost image size should not begin with 'image_'. Remove this from the start of $size. It *should* be in the blogetc.image_sizes config though!");
         }
 
 
-        throw new \InvalidArgumentException("HessamPost image size should be 'large','medium','thumbnail' or another field as defined in config/blogetc.php. Provided size ($size) is not valid");
+        throw new \InvalidArgumentException("BlogEtcPost image size should be 'large','medium','thumbnail' or another field as defined in config/blogetc.php. Provided size ($size) is not valid");
     }
 
 

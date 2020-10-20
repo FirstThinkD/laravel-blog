@@ -5,7 +5,7 @@ namespace WebDevEtc\BlogEtc\Events;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use WebDevEtc\BlogEtc\Models\HessamComment;
+use WebDevEtc\BlogEtc\Models\BlogEtcComment;
 
 /**
  * Class CommentWillBeDeleted
@@ -15,14 +15,14 @@ class CommentWillBeDeleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var  HessamComment */
+    /** @var  BlogEtcComment */
     public $comment;
 
     /**
      * CommentWillBeDeleted constructor.
-     * @param HessamComment $comment
+     * @param BlogEtcComment $comment
      */
-    public function __construct(HessamComment $comment)
+    public function __construct(BlogEtcComment $comment)
     {
         $this->comment=$comment;
     }

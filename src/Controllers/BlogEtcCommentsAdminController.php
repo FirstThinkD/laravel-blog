@@ -8,16 +8,16 @@ use WebDevEtc\BlogEtc\Events\CommentApproved;
 use WebDevEtc\BlogEtc\Events\CommentWillBeDeleted;
 use WebDevEtc\BlogEtc\Helpers;
 use WebDevEtc\BlogEtc\Middleware\UserCanManageBlogPosts;
-use WebDevEtc\BlogEtc\Models\HessamComment;
+use WebDevEtc\BlogEtc\Models\BlogEtcComment;
 
 /**
- * Class HessamCommentsAdminController
+ * Class BlogEtcCommentsAdminController
  * @package WebDevEtc\BlogEtc\Controllers
  */
-class HessamCommentsAdminController extends Controller
+class BlogEtcCommentsAdminController extends Controller
 {
     /**
-     * HessamCommentsAdminController constructor.
+     * BlogEtcCommentsAdminController constructor.
      */
     public function __construct()
     {
@@ -32,7 +32,7 @@ class HessamCommentsAdminController extends Controller
      */
     public function index(Request $request)
     {
-        $comments = HessamComment::withoutGlobalScopes()->orderBy("created_at", "desc")
+        $comments = BlogEtcComment::withoutGlobalScopes()->orderBy("created_at", "desc")
             ->with("post");
 
         if ($request->get("waiting_for_approval")) {
@@ -54,7 +54,7 @@ class HessamCommentsAdminController extends Controller
      */
     public function approve($blogCommentId)
     {
-        $comment = HessamComment::withoutGlobalScopes()->findOrFail($blogCommentId);
+        $comment = BlogEtcComment::withoutGlobalScopes()->findOrFail($blogCommentId);
         $comment->approved = true;
         $comment->save();
 
@@ -73,7 +73,7 @@ class HessamCommentsAdminController extends Controller
      */
     public function destroy($blogCommentId)
     {
-        $comment = HessamComment::withoutGlobalScopes()->findOrFail($blogCommentId);
+        $comment = BlogEtcComment::withoutGlobalScopes()->findOrFail($blogCommentId);
         event(new CommentWillBeDeleted($comment));
 
         $comment->delete();

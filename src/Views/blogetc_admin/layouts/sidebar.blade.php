@@ -3,7 +3,7 @@
         <div>
             <h6 class="my-0"><a href="{{ route('blogetc.admin.index') }}">Dashboard</a>
                 <span class="text-muted">(<?php
-                    $categoryCount = \WebDevEtc\BlogEtc\Models\HessamPost::count();
+                    $categoryCount = \WebDevEtc\BlogEtc\Models\BlogEtcPost::count();
 
                     echo $categoryCount . " " . str_plural("Post", $categoryCount);
 
@@ -32,7 +32,7 @@
             <h6 class="my-0"><a href="{{ route('blogetc.admin.comments.index') }}">Comments</a>
 
                 <span class="text-muted">(<?php
-                    $commentCount = \WebDevEtc\BlogEtc\Models\HessamComment::withoutGlobalScopes()->count();
+                    $commentCount = \WebDevEtc\BlogEtc\Models\BlogEtcComment::withoutGlobalScopes()->count();
 
                     echo $commentCount . " " . str_plural("Comment", $commentCount);
 
@@ -47,7 +47,7 @@
                     All Comments</a>
 
 
-                <?php $comment_approval_count = \WebDevEtc\BlogEtc\Models\HessamComment::withoutGlobalScopes()->where("approved", false)->count(); ?>
+                <?php $comment_approval_count = \WebDevEtc\BlogEtc\Models\BlogEtcComment::withoutGlobalScopes()->where("approved", false)->count(); ?>
 
                 <a href='{{ route('blogetc.admin.comments.index') }}?waiting_for_approval=true'
                    class='list-group-item list-group-color list-group-item list-group-color-action  @if(\Request::route()->getName() === 'blogetc.admin.comments.index' && \Request::get("waiting_for_approval")) active @elseif($comment_approval_count>0) list-group-item list-group-color-warning @endif  '><i
@@ -64,7 +64,7 @@
         <div>
             <h6 class="my-0"><a href="{{ route('blogetc.admin.categories.index') }}">Categories</a>
                 <span class="text-muted">(<?php
-                    $postCount = \WebDevEtc\BlogEtc\Models\HessamCategory::count();
+                    $postCount = \WebDevEtc\BlogEtc\Models\BlogEtcCategory::count();
                     echo $postCount . " " . str_plural("Category", $postCount);
                     ?>)</span>
             </h6>
@@ -106,24 +106,4 @@
             </div>
         </li>
     @endif
-
-    <li class="list-group-item list-group-color  justify-content-between lh-condensed">
-        <div>
-            <h6 class="my-0"><a href="{{ route('blogetc.admin.images.upload') }}">Languages</a></h6>
-
-            <div class="list-group ">
-
-                <a href='{{ route('blogetc.admin.images.all') }}'
-                   class='list-group-item list-group-color list-group-item list-group-color-action  @if(\Request::route()->getName() === 'blogetc.admin.images.all') active @endif  '><i
-                            class="fa fa-language fa-fw" aria-hidden="true"></i>
-                    All Languages</a>
-
-                <a href='{{ route('blogetc.admin.images.upload') }}'
-                   class='list-group-item list-group-color list-group-item list-group-color-action  @if(\Request::route()->getName() === 'blogetc.admin.images.upload') active @endif  '><i
-                            class="fa fa-plus fa-fw" aria-hidden="true"></i>
-                    Add new Language</a>
-            </div>
-        </div>
-    </li>
-
 </ul>

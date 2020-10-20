@@ -5,15 +5,15 @@ namespace WebDevEtc\BlogEtc\Controllers;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Laravelium\Feed\Feed;
-use WebDevEtc\BlogEtc\Models\HessamPost;
+use WebDevEtc\BlogEtc\Models\BlogEtcPost;
 use WebDevEtc\BlogEtc\Requests\FeedRequest;
 
 /**
- * Class HessamRssFeedController.php
+ * Class BlogEtcRssFeedController.php
  * All RSS feed viewing methods
  * @package WebDevEtc\BlogEtc\Controllers
  */
-class HessamRssFeedController extends Controller
+class BlogEtcRssFeedController extends Controller
 {
     /**
      * @param Feed $feed
@@ -38,14 +38,14 @@ class HessamRssFeedController extends Controller
      */
     protected function makeFreshFeed(Feed $feed)
     {
-        $posts = HessamPost::orderBy("posted_at", "desc")
+        $posts = BlogEtcPost::orderBy("posted_at", "desc")
             ->limit(config("blogetc.rssfeed.posts_to_show_in_rss_feed", 10))
             ->with("author")
             ->get();
 
         $this->setupFeed($feed, $posts);
 
-        /** @var HessamPost $post */
+        /** @var BlogEtcPost $post */
         foreach ($posts as $post) {
             $feed->add($post->title,
                 $post->author_string(),

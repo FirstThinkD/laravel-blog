@@ -5,7 +5,7 @@ namespace WebDevEtc\BlogEtc\Events;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use WebDevEtc\BlogEtc\Models\HessamCategory;
+use WebDevEtc\BlogEtc\Models\BlogEtcCategory;
 
 /**
  * Class CategoryEdited
@@ -15,14 +15,14 @@ class CategoryEdited
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var  HessamCategory */
+    /** @var  BlogEtcCategory */
     public $blogEtcCategory;
 
     /**
      * CategoryEdited constructor.
-     * @param HessamCategory $blogEtcCategory
+     * @param BlogEtcCategory $blogEtcCategory
      */
-    public function __construct(HessamCategory $blogEtcCategory)
+    public function __construct(BlogEtcCategory $blogEtcCategory)
     {
         $this->blogEtcCategory=$blogEtcCategory;
     }

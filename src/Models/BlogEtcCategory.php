@@ -5,30 +5,24 @@ namespace WebDevEtc\BlogEtc\Models;
 use Illuminate\Database\Eloquent\Model;
 use WebDevEtc\BlogEtc\Baum\Node;
 
-class HessamCategory extends Node
+class BlogEtcCategory extends Node
 {
     protected $parentColumn = 'parent_id';
     public $siblings = array();
 
     public $fillable = [
+        'category_name',
+        'slug',
+        'category_description',
         'parent_id'
     ];
-
-    /**
-     * The associated category translations
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function categoryTranslations()
-    {
-        return $this->hasMany(HessamCategoryTranslation::class,"category_id");
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function posts()
     {
-        return $this->belongsToMany(HessamPost::class, 'hessam_post_categories');
+        return $this->belongsToMany(BlogEtcPost::class, 'blog_etc_post_categories');
     }
 
     /**
@@ -60,12 +54,12 @@ class HessamCategory extends Node
 
 //    public function parent()
 //    {
-//        return $this->belongsTo('WebDevEtc\BlogEtc\Models\HessamCategory', 'parent_id');
+//        return $this->belongsTo('WebDevEtc\BlogEtc\Models\BlogEtcCategory', 'parent_id');
 //    }
 //
 //    public function children()
 //    {
-//        return $this->hasMany('WebDevEtc\BlogEtc\Models\HessamCategory', 'parent_id');
+//        return $this->hasMany('WebDevEtc\BlogEtc\Models\BlogEtcCategory', 'parent_id');
 //    }
 //
 //    // recursive, loads all descendants

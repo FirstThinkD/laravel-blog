@@ -5,7 +5,7 @@ namespace WebDevEtc\BlogEtc\Events;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use WebDevEtc\BlogEtc\Models\HessamPost;
+use WebDevEtc\BlogEtc\Models\BlogEtcPost;
 
 /**
  * Class BlogPostEdited
@@ -15,14 +15,14 @@ class BlogPostEdited
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var  HessamPost */
+    /** @var  BlogEtcPost */
     public $blogEtcPost;
 
     /**
      * BlogPostEdited constructor.
-     * @param HessamPost $blogEtcPost
+     * @param BlogEtcPost $blogEtcPost
      */
-    public function __construct(HessamPost $blogEtcPost)
+    public function __construct(BlogEtcPost $blogEtcPost)
     {
         $this->blogEtcPost=$blogEtcPost;
     }

@@ -5,8 +5,7 @@ namespace WebDevEtc\BlogEtc\Events;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use WebDevEtc\BlogEtc\Models\HessamCategory;
-use WebDevEtc\BlogEtc\Models\HessamCategoryTranslation;
+use WebDevEtc\BlogEtc\Models\BlogEtcCategory;
 
 /**
  * Class CategoryAdded
@@ -16,18 +15,16 @@ class CategoryAdded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var  HessamCategory */
-    public $hessamCategory;
-    public $hessamCategoryTranslation;
+    /** @var  BlogEtcCategory */
+    public $blogEtcCategory;
 
     /**
      * CategoryAdded constructor.
-     * @param HessamCategory $hessamCategory
+     * @param BlogEtcCategory $blogEtcCategory
      */
-    public function __construct(HessamCategory $hessamCategory, HessamCategoryTranslation  $hessamCategoryTranslation)
+    public function __construct(BlogEtcCategory $blogEtcCategory)
     {
-        $this->hessamCategory=$hessamCategory;
-        $this->hessamCategoryTranslation = $hessamCategoryTranslation;
+        $this->blogEtcCategory=$blogEtcCategory;
     }
 
 }
