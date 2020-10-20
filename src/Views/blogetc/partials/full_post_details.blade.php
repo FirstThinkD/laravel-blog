@@ -3,7 +3,7 @@
         Post</a>
 @endif
 
-<h1 class='blog_title'>{{$post->title}}</h1>
+<h2 class='blog_title'>{{$post->title}}</h2>
 <h5 class='blog_subtitle'>{{$post->subtitle}}</h5>
 
 

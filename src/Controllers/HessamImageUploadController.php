@@ -5,22 +5,22 @@ namespace WebDevEtc\BlogEtc\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use WebDevEtc\BlogEtc\Middleware\UserCanManageBlogPosts;
-use WebDevEtc\BlogEtc\Models\BlogEtcUploadedPhoto;
+use WebDevEtc\BlogEtc\Models\HessamUploadedPhoto;
 use File;
 use WebDevEtc\BlogEtc\Requests\UploadImageRequest;
 use WebDevEtc\BlogEtc\Traits\UploadFileTrait;
 
 /**
- * Class BlogEtcAdminController
+ * Class HessamAdminController
  * @package WebDevEtc\BlogEtc\Controllers
  */
-class BlogEtcImageUploadController extends Controller
+class HessamImageUploadController extends Controller
 {
 
     use UploadFileTrait;
 
     /**
-     * BlogEtcAdminController constructor.
+     * HessamAdminController constructor.
      */
     public function __construct()
     {
@@ -46,7 +46,7 @@ class BlogEtcImageUploadController extends Controller
 
     public function index()
     {
-        return view("blogetc_admin::imageupload.index", ['uploaded_photos' => BlogEtcUploadedPhoto::orderBy("id", "desc")->paginate(10)]);
+        return view("blogetc_admin::imageupload.index", ['uploaded_photos' => HessamUploadedPhoto::orderBy("id", "desc")->paginate(10)]);
     }
 
     /**
@@ -80,7 +80,7 @@ class BlogEtcImageUploadController extends Controller
      *
      * @return array returns an array of details about each file resized.
      * @throws \Exception
-     * @todo - This class was added after the other main features, so this duplicates some code from the main blog post admin controller (BlogEtcAdminController). For next full release this should be tided up.
+     * @todo - This class was added after the other main features, so this duplicates some code from the main blog post admin controller (HessamAdminController). For next full release this should be tided up.
      */
     protected function processUploadedImages(UploadImageRequest $request)
     {
@@ -112,7 +112,7 @@ class BlogEtcImageUploadController extends Controller
 
 
         // store the image upload.
-        BlogEtcUploadedPhoto::create([
+        HessamUploadedPhoto::create([
             'image_title' => $request->get("image_title"),
             'source' => "ImageUpload",
             'uploader_id' => optional(\Auth::user())->id,

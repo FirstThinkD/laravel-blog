@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddParametersBlogEtcCategoriesTable extends Migration
+class CreateHessamCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,20 @@ class AddParametersBlogEtcCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('blog_etc_categories', function (Blueprint $table) {
+        Schema::create('hessam_categories', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->unsignedInteger("created_by")->nullable()->index()->comment("user id");
+
+            //columns related to multi-level categories
             $table->integer('parent_id')->nullable()->default(0);
             $table->integer('lft')->nullable();
             $table->integer('rgt')->nullable();
             $table->integer('depth')->nullable();
+
+            $table->timestamps();
         });
+
     }
 
     /**
@@ -28,8 +36,6 @@ class AddParametersBlogEtcCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('blog_etc_categories', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('hessam_categories');
     }
 }
